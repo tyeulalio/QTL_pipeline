@@ -39,14 +39,20 @@ def get_args():
     parser.add_argument('-covariates',
                         type=str, help="Covariates input file",
                         required=True)
+
     parser.add_argument('-plink',
                         type=str, help="Prefix for PLINK .bim/.fam/.bed genotype files",
-                        required=True)
+                        required=True
+                        )
     # cis window size
     parser.add_argument('-window',
                         type=int, help="Window size for cis-QTL mapping",
                         required=False,
                         default=1e6
+                        )
+    parser.add_argument('-run_example',
+                        type=bool, help="Run the example data",
+                        required=False, default=False
                         )
 
     # get arguments
@@ -58,7 +64,8 @@ def get_args():
                  "covs_file" : args.covariates,
                  "plink_prefix_path": args.plink,
                  "window" : args.window,
-                 "output_prefix" : "{}/{}".format(args.output, args.prefix)
+                 "output_prefix" : "{}/{}".format(args.output, args.prefix),
+                 "run_example" : args.run_example
                  }
 
     print("Saving output files to", args_dict['output_dir'])
@@ -82,7 +89,7 @@ def load_input(phenotype_bed_file, covariates_file, plink_prefix_path):
 
     print("--> loading covariates", datetime.now())
     print(covariates_file)
-    covariates_df = pd.read_csv(covariates_file, sep='\t', index_col=0)
+    covariates_df = pd.read_csv(covariates_file, sep='\t', index_col=0).T # remove this T if rows/columns are swapped, rows=samples
 
     print("covariates_df:", covariates_df.shape)
     print(covariates_df.head())
@@ -109,7 +116,7 @@ def load_input(phenotype_bed_file, covariates_file, plink_prefix_path):
 
 
 
-def cis_mapping(data_dict, cis_window, output_prefix, output_dir):
+def cis_mapping(data_dict, cis_window, output_prefix, output_dir, run_example):
     # ---  cis-QTL: nominal p-value for all variant-phenotype pairs
     print("--> mapping cis-QTLs", datetime.now())
 
@@ -122,6 +129,13 @@ def cis_mapping(data_dict, cis_window, output_prefix, output_dir):
     # map all cis-associations (results for each chrom written to file)
 
     print("cis window: {}".format(cis_window))
+
+    # for the example, we need to subset to chromosome 18
+    if run_example:
+        print("Running example mode!!")
+        phenotype_df = phenotype_df.loc[phenotype_pos_df['chr'] == 'chr18']
+        phenotype_pos_df = phenotype_pos_df.loc[phenotype_pos_df['chr'] == 'chr18']
+
 
     # get summary statistics for all variant-phenotype pairs
     # this outputs to the parquet files for each chromosome
@@ -140,7 +154,6 @@ def cis_mapping(data_dict, cis_window, output_prefix, output_dir):
     tensorqtl.calculate_qvalues(cis_df, qvalue_lambda=0.85, fdr=0.05)
     out_file = os.path.join("{}.cis_qtl.txt.gz".format(output_prefix))
     cis_df.to_csv(out_file, sep='\t', float_format='%.6g')
-
 
     # save the summary stats for the permutation runs
     cis_df.to_csv("{}/cis_qtl_summary_stats.csv".format(output_dir))
@@ -224,7 +237,7 @@ def main():
     data_dict = load_input(args_dict['pheno_file'], args_dict['covs_file'], args_dict['plink_prefix_path'])
 
     # map cis qtls
-    cis_mapping(data_dict, args_dict['window'], args_dict['output_prefix'], args_dict['output_dir'])
+    cis_mapping(data_dict, args_dict['window'], args_dict['output_prefix'], args_dict['output_dir'], args_dict['run_example'])
 
     # format output
     format_output(args_dict['output_prefix'], args_dict['output_dir'])
