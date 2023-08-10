@@ -1,0 +1,5 @@
+# ignore everything in the example data directory
+examples/example_data/*
+
+# do no ignore the README from the example data directory
+!examples/example_data/README
