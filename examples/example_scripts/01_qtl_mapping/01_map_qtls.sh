@@ -8,7 +8,7 @@ PHENO_FILE="${DATADIR}/tensorqtl/GEUVADIS.445_samples.expression.bed.gz"
 COVS_FILE="${DATADIR}/example_data/tensorqtl/GEUVADIS.445_samples.covariates.txt"
 PLINK_PATH="${DATADIR}/tensorqtl/GEUVADIS.445_samples.GRCh38.20170504.maf01.filtered.nodup.chr18"
 
-OUTPUT_DIR="../../example_output/tensorqtl/"
+OUTPUT_DIR="../../example_output/01_tensorqtl/"
 mkdir -p $OUTPUT_DIR
 
 # make sure conda environment is activated

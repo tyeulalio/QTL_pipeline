@@ -4,11 +4,11 @@
 
 
 # create the main output directory
-OUTPUT_DIR="../../example_output/finemapping/02_run_torus"
+OUTPUT_DIR="../../example_output/02_finemapping/02_run_torus"
 mkdir -p $OUTPUT_DIR
 
 # output from previous step 01_create_torus_input.py
-INPUT_FILE="../../example_output/finemapping/01_create_torus_input/GEUVADIS_fastqtl_single_snp_output.tsv.gz"
+INPUT_FILE="../../example_output/02_finemapping/01_create_torus_input/GEUVADIS_fastqtl_single_snp_output.tsv.gz"
 
 
 # call the run_torus script from the qtl pipeline
