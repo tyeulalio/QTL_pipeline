@@ -17,6 +17,7 @@ def get_args():
     # optional parameters
     parser.add_argument('-p', '--prefix', type=str, required=False, default="torus", help="Prefix for output file name")
     # parser.add_argument('-chroms', '--chromosomes', type=list, required=False, default=range(1,23), help="List of chromosomes to process")
+    parser.add_argument('-run_example', type=bool, required=False, help="Boolean, indicating whether to run the example data")
 
     args = parser.parse_args()
 
@@ -65,6 +66,10 @@ def main():
 
     # process each chromosome
     chromosomes = range(1,23)
+    if args.run_example:
+        print("Running example")
+        chromosomes = [18]
+
     full_qtls = pd.DataFrame()
     for chrom in chromosomes:
         chrom_qtls = process_chromosome(chrom, savefile, args.qtl_file)
