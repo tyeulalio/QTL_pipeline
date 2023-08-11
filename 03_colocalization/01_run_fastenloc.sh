@@ -6,6 +6,7 @@ OUTDIR=$1
 QTL_FILE=$2
 GWAS_FILE=$3
 THREADS=$4
+NUM_GWAS_VARS=$5
 
 
 # create the output directory if it doesn't exist

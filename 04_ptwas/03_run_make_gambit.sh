@@ -2,18 +2,7 @@
 
 PTWAS_WEIGHTS_FILE=$1
 OUTDIR=$2
-
-# output file
-OUTPUT_FILE="${OUTDIR}/all_gene.ptwas_weights.gambit.vcf"
-rm -f $OUTPUT_FILE
-touch $OUTPUT_FILE
-
-# get command line input
-# run the r script
-Rscript ../make_GAMBIT.DB.R \
-    -d ${PTWAS_WEIGHTS_FILE} \
-    -o ${OUTPUT_FILE}
-
+OUTPUT_FILE=$3
 
 # format the output file by chromosome
 # to save time in scan step
