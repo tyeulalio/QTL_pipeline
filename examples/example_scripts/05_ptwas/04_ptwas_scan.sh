@@ -25,7 +25,7 @@ do
     LD_PANEL_FILES="/home/eulalio/deconvolution/new_rosmap/output/07_ptwas/06_swapped_ld_panels/$GWAS_TYPE/chr*.vcf.gz"
     set -f
 
-    OUTPUT_PREFIX="${RUN_OUTDIR}/chr${CHROM}_ptwas_scan"
+    OUTPUT_PREFIX="${OUTDIR}/chr${CHROM}_ptwas_scan"
 
     ## --- run script here
     ../../../04_ptwas/04_ptwas_scan.sh \
@@ -34,3 +34,14 @@ do
         $LD_PANEL_FILES \
         $OUTPUT_PREFIX
 done
+
+
+# load conda environment
+. "${HOME}/micromamba/etc/profile.d/conda.sh"
+. "${HOME}/micromamba/etc/profile.d/mamba.sh"
+mamba activate r
+
+# combine all of the files
+echo "Combining chromosome files"
+Rscript ../../../04_ptwas/05_format_scan_results.R \
+    $OUTDIR
